@@ -10,11 +10,22 @@ namespace DAS_Coursework.data
     {
         private static string FilePath = @"/Users/otcheredev/Projects/DAS Coursework/DAS Coursework/data/isst.xlsx";
 
-        private static IExcelDataReader GetExcelReader()
+        private static IExcelDataReader? GetExcelReader()
         {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            var stream = File.Open(FilePath, FileMode.Open, FileAccess.Read);
-            return ExcelReaderFactory.CreateReader(stream);
+            try
+            {
+                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                var stream = File.Open(FilePath, FileMode.Open, FileAccess.Read);
+                return ExcelReaderFactory.CreateReader(stream);
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Please provide a valid Excel file path with the journey data");
+                Console.WriteLine("Please read the readme file for all instruction needed to run the application");
+                Environment.Exit(0);
+                return null;
+            }
         }
 
         private static List<string> GetColumnData(int columnIndex)
