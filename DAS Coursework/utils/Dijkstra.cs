@@ -58,18 +58,34 @@ namespace DAS_Coursework.utils
             List<string> path = new List<string>();
             while (currentVertex != source)
             {
-                Verticex prevVertex = predecessors[currentVertex];
-                WeightedEdge<Verticex> connectingEdge = edgePredecessors[currentVertex];
-                if (path.Count == 0)
+                Verticex? prevVertex = null;
+                if (predecessors.ContainsKey(currentVertex))
+                {
+                    prevVertex = predecessors[currentVertex];
+        
+                }
+                
+
+                WeightedEdge<Verticex>? connectingEdge = null;
+
+                if (edgePredecessors.ContainsKey(currentVertex))
+                {
+                    connectingEdge = edgePredecessors[currentVertex];
+                }
+
+                if (path.Count == 0 && connectingEdge != null)
                 {
                     endLine = connectingEdge.line;
                     endDir = connectingEdge.direction;
                 }
 
-                path.Add($"{connectingEdge.line} ({connectingEdge.direction}): {connectingEdge.Source.Name} to {connectingEdge.Target.Name} {connectingEdge.weight}min");
+                if(connectingEdge != null)
+                {
+                    path.Add($"{connectingEdge.line} ({connectingEdge.direction}): {connectingEdge.Source.Name} to {connectingEdge.Target.Name} {connectingEdge.weight}min");
+                } 
 
                 // Check for line change
-                if (edgePredecessors.ContainsKey(currentVertex) && edgePredecessors.ContainsKey(prevVertex))
+                if (edgePredecessors.ContainsKey(currentVertex) && prevVertex!= null&& edgePredecessors.ContainsKey(prevVertex))
                 {
                     WeightedEdge<Verticex> prevEdge = edgePredecessors[prevVertex];
                     if (prevEdge != null && connectingEdge != null && prevEdge.line != connectingEdge.line)
@@ -85,8 +101,12 @@ namespace DAS_Coursework.utils
                     return;
                 }
 
-                startDir = connectingEdge.direction;
-                startLine = connectingEdge.line;
+                if(connectingEdge != null)
+                {
+                    startDir = connectingEdge.direction;
+                    startLine = connectingEdge.line;
+                }
+                
             }
             path.Add($"Start: {source.Name}, {startLine} ({startDir})");
 
